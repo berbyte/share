@@ -1,0 +1,55 @@
+name: Go Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Build
+        run: go build -o share
+
+      - name: Archive binary
+        run: |
+          tar -czvf share_$(uname -s)_$(uname -m).tar.gz share
+          mkdir -p release
+          mv share_*.tar.gz release/
+
+      - name: Upload Release Asset
+        uses: actions/upload-artifact@v2
+        with:
+          name: share-binaries
+          path: release/*.tar.gz
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download binaries
+        uses: actions/download-artifact@v2
+        with:
+          name: share-binaries
+          path: release
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release/*.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
