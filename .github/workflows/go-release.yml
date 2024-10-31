@@ -10,6 +10,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -40,6 +43,10 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
     steps:
       - name: Download binaries
         uses: actions/download-artifact@v3
@@ -48,7 +55,7 @@ jobs:
           path: release
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v1.21.0
         with:
           files: release/*.tar.gz
         env:
