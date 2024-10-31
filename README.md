@@ -10,7 +10,7 @@
 
 > [!NOTE]
 >
->  A command-line tool written in Go to upload files to a Tigris bucket. If no file is provided, it reads from standard input and names the file using a timestamp. The resulting URL is copied to the clipboard.
+>  A command-line tool written in Go to upload files to a Tigris bucket. If no file is provided, it reads from standard input and names the file using a timestamp. **The resulting URL is copied to the clipboard.**
 >
 
 
@@ -33,6 +33,11 @@
 > echo "your content here" | share
 > ```
 > This will create a file named with the current timestamp, e.g., `1730344643.txt`.
+>
+> ### Taco Bell Programming
+> ```sh
+> awk '{ print $1 }' access.log | sort | uniq -c | sort -nr | head -10 | share
+> ```
 >
 > ### Output
 > After uploading, the URL of the uploaded file will be copied to the clipboard, and also printed in the terminal.
