@@ -43,6 +43,7 @@ func main() {
 		}
 		defer file.Close()
 		fileContent = file
+		_, fileName = filepath.Split(fileName)
 	} else {
 		// Read from standard input
 		fileName = fmt.Sprintf("%d.txt", time.Now().Unix())
