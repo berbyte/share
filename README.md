@@ -166,7 +166,7 @@ Distributed under the Apache-2.0 License. See `LICENSE.txt` for more information
 <!-- CONTACT -->
 ## Contact
 
-BER Team - [@berbyte](https://github.com/berbyte) - github@berbyte.sh
+BER Team - [@berbyte](https://github.com/berbyte) - github@ber.sh
 
 Project Link: [https://github.com/berbyte/share](https://github.com/berbyte/share)
 
