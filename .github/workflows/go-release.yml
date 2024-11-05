@@ -1,62 +1,31 @@
-name: Go Release
+name: goreleaser
 
 on:
+  pull_request:
   push:
-    tags:
-      - "v*.*.*"
-  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  build:
+  goreleaser:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Go
-        uses: actions/setup-go@v2
+      -
+        name: Checkout
+        uses: actions/checkout@v4
         with:
-          go-version: 1.23.2
-
-      - name: Install dependencies
-        run: go mod tidy
-
-      - name: Build
-        run: go build -o share
-
-      - name: Archive binary
-        run: |
-          tar -czvf share_$(uname -s)_$(uname -m).tar.gz share
-          mkdir -p release
-          mv share_*.tar.gz release/
-
-      - name: Upload Release Asset
-        uses: actions/upload-artifact@v3
+          fetch-depth: 0
+      -
+        name: Set up Go
+        uses: actions/setup-go@v5
+      -
+        name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: share-binaries
-          path: release/*.tar.gz
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-
-    steps:
-      - name: Download binaries
-        uses: actions/download-artifact@v3
-        with:
-          name: share-binaries
-          path: release
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1.21.0
-        with:
-          files: release/*.tar.gz
+          distribution: goreleaser
+          version: '~> v2'
+          args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
